@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cladify Home & Living</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --warm-sand: #C8A97E;
+    --deep-teal: #3D7A7A;
+    --light-teal: #7EB8B8;
+    --stone: #8B7355;
+    --cream: #FAF7F2;
+    --warm-white: #F5F0E8;
+    --dark-earth: #2C2018;
+    --mid-brown: #6B4F35;
+    --soft-teal: #E8F4F4;
+    --accent-gold: #B8943A;
+  }
+
+  * { cursor: none !important; }
+
+  #cursor {
+    position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+    width: 12px; height: 12px;
+    background: var(--deep-teal);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, background 0.3s, width 0.3s, height 0.3s;
+  }
+  #cursor-ring {
+    position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998;
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--warm-sand);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease-out, width 0.3s, height 0.3s, opacity 0.3s;
+  }
+  body.hovering #cursor { width: 8px; height: 8px; background: var(--accent-gold); }
+  body.hovering #cursor-ring { width: 52px; height: 52px; opacity: 0.6; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--dark-earth);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4vw;
+    background: rgba(250, 247, 242, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200, 169, 126, 0.2);
+    transition: padding 0.3s;
+  }
+  nav.scrolled { padding: 0.8rem 4vw; }
+  .nav-logo { display: flex; align-items: center; gap: 0.7rem; }
+  .nav-logo img { height: 48px; width: auto; }
+  .nav-links { display: flex; gap: 2.2rem; align-items: center; }
+  .nav-links a {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dark-earth);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -3px; left: 0; right: 0; height: 1px;
+    background: var(--warm-sand);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--deep-teal); }
+  .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+  .nav-cta {
+    padding: 0.55rem 1.4rem;
+    background: var(--deep-teal);
+    color: var(--cream) !important;
+    border-radius: 2px;
+    letter-spacing: 0.08em !important;
+  }
+  .nav-cta::after { display: none; }
+  .nav-cta:hover { background: var(--stone) !important; color: var(--cream) !important; }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 1.5px; background: var(--dark-earth); transition: 0.3s; }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(160deg, var(--cream) 0%, var(--warm-white) 50%, var(--soft-teal) 100%);
+    padding-top: 80px;
+  }
+  .hero-bg-pattern {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image: repeating-linear-gradient(45deg, var(--deep-teal) 0, var(--deep-teal) 1px, transparent 0, transparent 50%);
+    background-size: 28px 28px;
+  }
+  .hero-inner {
+    text-align: center;
+    z-index: 2;
+    padding: 2rem;
+    max-width: 900px;
+  }
+  .hero-logo {
+    width: 180px; height: 180px;
+    object-fit: contain;
+    margin-bottom: 2rem;
+    animation: floatLogo 5s ease-in-out infinite;
+    filter: drop-shadow(0 12px 32px rgba(61,122,122,0.18));
+  }
+  @keyframes floatLogo {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-14px); }
+  }
+  .hero-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.12;
+    color: var(--dark-earth);
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.3s;
+  }
+  .hero-tagline em { color: var(--deep-teal); font-style: italic; font-weight: 400; }
+  .hero-sub {
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: var(--stone);
+    margin-bottom: 2.4rem;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.6s;
+  }
+  .hero-btns {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.9s;
+  }
+  .btn-primary {
+    padding: 0.9rem 2.4rem;
+    background: var(--deep-teal);
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-radius: 2px;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--stone); transform: translateY(-2px); }
+  .btn-outline {
+    padding: 0.9rem 2.4rem;
+    border: 1.5px solid var(--warm-sand);
+    color: var(--dark-earth);
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-radius: 2px;
+    transition: background 0.3s, color 0.3s, transform 0.2s;
+  }
+  .btn-outline:hover { background: var(--warm-sand); color: var(--cream); transform: translateY(-2px); }
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--stone);
+    animation: fadeIn 2s ease forwards 1.5s; opacity: 0;
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--warm-sand), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  /* SECTION BASE */
+  section { padding: 6rem 6vw; }
+  .section-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm-sand);
+    margin-bottom: 0.8rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .section-label::before {
+    content: ''; display: block; width: 28px; height: 1px; background: var(--warm-sand);
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--dark-earth);
+    margin-bottom: 1.2rem;
+  }
+  .section-title em { color: var(--deep-teal); font-style: italic; }
+  .section-desc {
+    font-size: 0.96rem;
+    font-weight: 300;
+    color: var(--stone);
+    line-height: 1.8;
+    max-width: 580px;
+  }
+
+  /* MARQUEE STRIP */
+  .marquee-strip {
+    background: var(--deep-teal);
+    color: var(--cream);
+    padding: 1rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .marquee-inner {
+    display: inline-flex;
+    gap: 3rem;
+    animation: marquee 22s linear infinite;
+  }
+  .marquee-inner span {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .marquee-dot { color: var(--warm-sand); font-size: 1rem; }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SERVICES SCROLL */
+  #services { background: var(--warm-white); overflow: hidden; }
+  .services-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    flex-wrap: wrap; gap: 1.5rem;
+    margin-bottom: 3.5rem;
+  }
+  .services-scroll-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+  .services-track {
+    display: flex; gap: 1.5rem;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+  }
+  .service-card {
+    flex: 0 0 280px;
+    background: var(--cream);
+    border: 1px solid rgba(200,169,126,0.25);
+    border-radius: 4px;
+    padding: 2rem 1.8rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--deep-teal);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+    transform-origin: left;
+  }
+  .service-card:hover { transform: translateY(-4px); border-color: var(--warm-sand); }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-icon {
+    width: 48px; height: 48px;
+    background: var(--soft-teal);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.4rem;
+    font-size: 1.4rem;
+  }
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--dark-earth);
+    margin-bottom: 0.6rem;
+  }
+  .service-desc {
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--stone);
+    line-height: 1.7;
+  }
+  .service-num {
+    position: absolute; bottom: 1.5rem; right: 1.8rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    color: rgba(200,169,126,0.15);
+    line-height: 1;
+  }
+  .services-nav {
+    display: flex; gap: 0.7rem; margin-top: 2rem;
+  }
+  .svc-btn {
+    width: 44px; height: 44px;
+    border: 1.5px solid var(--warm-sand);
+    background: none;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    color: var(--dark-earth);
+    transition: background 0.3s, color 0.3s;
+  }
+  .svc-btn:hover { background: var(--deep-teal); color: var(--cream); border-color: var(--deep-teal); }
+
+  /* WHY US */
+  #why { background: var(--cream); }
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 3rem;
+  }
+  .why-visual {
+    position: relative;
+    padding: 2rem;
+  }
+  .why-box {
+    background: var(--deep-teal);
+    border-radius: 4px;
+    padding: 3rem 2.5rem;
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+  .why-box::before {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+    bottom: -60px; right: -60px;
+  }
+  .why-box-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem;
+    font-weight: 300;
+    color: var(--warm-sand);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .why-box-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(250,247,242,0.7);
+  }
+  .why-accent {
+    position: absolute; bottom: -20px; right: -20px;
+    width: 120px; height: 120px;
+    border: 1.5px solid var(--warm-sand);
+    border-radius: 50%;
+    opacity: 0.3;
+  }
+  .why-points { display: flex; flex-direction: column; gap: 1.5rem; }
+  .why-point {
+    display: flex; gap: 1.2rem; align-items: flex-start;
+    padding: 1.5rem;
+    background: var(--warm-white);
+    border-radius: 4px;
+    border-left: 3px solid var(--warm-sand);
+    transition: border-color 0.3s;
+  }
+  .why-point:hover { border-color: var(--deep-teal); }
+  .why-point-icon { font-size: 1.4rem; margin-top: 2px; flex-shrink: 0; }
+  .why-point-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--dark-earth);
+    margin-bottom: 0.3rem;
+  }
+  .why-point-text {
+    font-size: 0.85rem;
+    color: var(--stone);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* GALLERY */
+  #gallery { background: var(--dark-earth); }
+  #gallery .section-label { color: var(--warm-sand); }
+  #gallery .section-title { color: var(--cream); }
+  #gallery .section-title em { color: var(--light-teal); }
+  #gallery .section-desc { color: rgba(250,247,242,0.6); }
+  .gallery-header { margin-bottom: 3rem; }
+  .gallery-tabs {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+    margin-top: 1.5rem;
+  }
+  .gallery-tab {
+    padding: 0.45rem 1.2rem;
+    border: 1px solid rgba(200,169,126,0.35);
+    background: none;
+    color: rgba(250,247,242,0.65);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: 'Jost', sans-serif;
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .gallery-tab:hover, .gallery-tab.active {
+    background: var(--warm-sand);
+    color: var(--dark-earth);
+    border-color: var(--warm-sand);
+  }
+  .gallery-masonry {
+    columns: 3 280px;
+    gap: 1rem;
+  }
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--mid-brown);
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-placeholder {
+    width: 100%;
+    display: block;
+    background: linear-gradient(135deg, var(--mid-brown), var(--deep-teal));
+    position: relative;
+  }
+  .gallery-placeholder-inner {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: rgba(250,247,242,0.5);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    gap: 0.5rem;
+  }
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: rgba(44,32,24,0.75);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    padding: 1rem;
+    text-align: center;
+  }
+  .gallery-overlay-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--cream);
+    margin-bottom: 0.3rem;
+  }
+  .gallery-overlay-tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--warm-sand);
+  }
+
+  /* CONTACT */
+  #contact { background: var(--warm-white); }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 3rem;
+    align-items: start;
+  }
+  .contact-info { display: flex; flex-direction: column; gap: 1.5rem; }
+  .contact-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .contact-icon {
+    width: 40px; height: 40px;
+    background: var(--soft-teal);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .contact-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--warm-sand);
+    margin-bottom: 0.2rem;
+  }
+  .contact-value {
+    font-size: 0.95rem;
+    color: var(--dark-earth);
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--stone);
+  }
+  .form-input, .form-select, .form-textarea {
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(200,169,126,0.35);
+    border-radius: 2px;
+    background: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem;
+    color: var(--dark-earth);
+    transition: border-color 0.3s, outline 0.3s;
+    outline: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--deep-teal);
+    box-shadow: 0 0 0 3px rgba(61,122,122,0.1);
+  }
+  .form-textarea { resize: vertical; min-height: 110px; }
+  .form-select { appearance: none; }
+  .form-submit {
+    padding: 1rem;
+    background: var(--deep-teal);
+    color: var(--cream);
+    border: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-radius: 2px;
+    transition: background 0.3s, transform 0.2s;
+    width: 100%;
+  }
+  .form-submit:hover { background: var(--stone); transform: translateY(-1px); }
+  .form-success {
+    display: none;
+    padding: 1rem;
+    background: var(--soft-teal);
+    border: 1px solid var(--light-teal);
+    border-radius: 2px;
+    color: var(--deep-teal);
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark-earth);
+    color: rgba(250,247,242,0.6);
+    padding: 3rem 6vw 2rem;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 2.5rem;
+  }
+  .footer-brand img { height: 56px; margin-bottom: 1rem; filter: brightness(1.1); }
+  .footer-brand p { font-size: 0.85rem; line-height: 1.7; max-width: 280px; }
+  .footer-heading {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warm-sand);
+    margin-bottom: 1rem;
+  }
+  .footer-links { display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-links a {
+    color: rgba(250,247,242,0.55);
+    text-decoration: none;
+    font-size: 0.87rem;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--warm-sand); }
+  .footer-bottom {
+    border-top: 1px solid rgba(250,247,242,0.08);
+    padding-top: 1.5rem;
+    display: flex; justify-content: space-between;
+    align-items: center; flex-wrap: wrap; gap: 1rem;
+    font-size: 0.78rem;
+  }
+  .footer-bottom a { color: var(--warm-sand); text-decoration: none; }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* MOBILE MENU */
+  .mobile-menu {
+    display: none;
+    position: fixed; top: 72px; left: 0; right: 0; z-index: 99;
+    background: var(--cream);
+    border-bottom: 1px solid rgba(200,169,126,0.3);
+    padding: 1.5rem 6vw;
+    flex-direction: column; gap: 1.2rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: var(--dark-earth);
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(200,169,126,0.15);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .why-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-masonry { columns: 2 200px; }
+  }
+  @media (max-width: 600px) {
+    section { padding: 4rem 5vw; }
+    nav { padding: 1rem 5vw; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .gallery-masonry { columns: 1; }
+    .service-card { flex: 0 0 240px; }
+  }
+
+  /* WA FLOAT */
+  .wa-float {
+    position: fixed;
+    bottom: 2rem; right: 2rem; z-index: 200;
+    width: 52px; height: 52px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.35);
+    text-decoration: none;
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: pulse-wa 2.5s ease-in-out infinite;
+  }
+  .wa-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.5); }
+  @keyframes pulse-wa {
+    0%,100% { box-shadow: 0 4px 20px rgba(37,211,102,0.35); }
+    50% { box-shadow: 0 4px 28px rgba(37,211,102,0.6), 0 0 0 8px rgba(37,211,102,0.1); }
+  }
+  .wa-float svg { width: 28px; height: 28px; fill: white; }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <img src="WhatsApp_Image_2026-04-13_at_5_20_54_PM.jpeg" alt="Cladify" id="nav-logo-img" />
+  </div>
+  <div class="nav-links">
+    <a href="#hero">Home</a>
+    <a href="#services">Services</a>
+    <a href="#why">About</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#contact" class="nav-cta">Get a Quote</a>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#hero" onclick="closeMobile()">Home</a>
+  <a href="#services" onclick="closeMobile()">Services</a>
+  <a href="#why" onclick="closeMobile()">About</a>
+  <a href="#gallery" onclick="closeMobile()">Gallery</a>
+  <a href="#contact" onclick="closeMobile()">Get a Quote</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-inner">
+    <img class="hero-logo" src="WhatsApp_Image_2026-04-13_at_5_20_54_PM.jpeg" alt="Cladify Home & Living" id="hero-logo-img" />
+    <h1 class="hero-tagline">Transform Your Space<br>Into <em>Living Art</em></h1>
+    <p class="hero-sub">Premium interior & home protection solutions — Thrissur, Kerala</p>
+    <div class="hero-btns">
+      <a href="#services" class="btn-primary">Explore Services</a>
+      <a href="#gallery" class="btn-outline">View Our Work</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-inner" id="marquee">
+    <span>Mosquito Screens</span><span class="marquee-dot">◆</span>
+    <span>Blinds & Curtains</span><span class="marquee-dot">◆</span>
+    <span>Wallpapers</span><span class="marquee-dot">◆</span>
+    <span>Cool Film & Vinyl</span><span class="marquee-dot">◆</span>
+    <span>Sign Board Works</span><span class="marquee-dot">◆</span>
+    <span>Pest Control</span><span class="marquee-dot">◆</span>
+    <span>Deep Cleaning</span><span class="marquee-dot">◆</span>
+    <span>Mosquito Screens</span><span class="marquee-dot">◆</span>
+    <span>Blinds & Curtains</span><span class="marquee-dot">◆</span>
+    <span>Wallpapers</span><span class="marquee-dot">◆</span>
+    <span>Cool Film & Vinyl</span><span class="marquee-dot">◆</span>
+    <span>Sign Board Works</span><span class="marquee-dot">◆</span>
+    <span>Pest Control</span><span class="marquee-dot">◆</span>
+    <span>Deep Cleaning</span><span class="marquee-dot">◆</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header">
+    <div>
+      <p class="section-label reveal">Our Expertise</p>
+      <h2 class="section-title reveal reveal-delay-1">Crafted <em>Services</em><br>for Every Space</h2>
+      <p class="section-desc reveal reveal-delay-2">From residential comfort to commercial excellence — we bring quality, precision, and care to every project.</p>
+    </div>
+    <div class="services-nav">
+      <button class="svc-btn" id="svc-prev">←</button>
+      <button class="svc-btn" id="svc-next">→</button>
+    </div>
+  </div>
+  <div class="services-scroll-wrapper reveal">
+    <div class="services-track" id="svcTrack">
+
+      <div class="service-card">
+        <div class="service-icon">🦟</div>
+        <h3 class="service-name">Mosquito Screens</h3>
+        <p class="service-desc">Custom-fitted insect screens for windows, doors, and balconies. Enjoy fresh air without the bugs.</p>
+        <span class="service-num">01</span>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🪟</div>
+        <h3 class="service-name">Blinds & Curtains</h3>
+        <p class="service-desc">Premium roller, zebra, wooden, and vertical blinds. Custom drapery tailored to your style.</p>
+        <span class="service-num">02</span>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🎨</div>
+        <h3 class="service-name">Wallpapers</h3>
+        <p class="service-desc">Designer wallpapers sourced globally — textures, murals, and patterns for every aesthetic.</p>
+        <span class="service-num">03</span>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🌡️</div>
+        <h3 class="service-name">Cool Film & Vinyl</h3>
+        <p class="service-desc">Heat-reducing window films and vinyl wraps that protect, beautify, and save energy.</p>
+        <span class="service-num">04</span>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🪧</div>
+        <h3 class="service-name">Sign Board Works</h3>
+        <p class="service-desc">Professional signage solutions — LED, acrylic, and flex boards for commercial spaces.</p>
+        <span class="service-num">05</span>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🛡️</div>
+        <h3 class="service-name">Pest Control</h3>
+        <p class="service-desc">Safe, effective pest management for homes and businesses. Licensed and eco-conscious.</p>
+        <span class="service-num">06</span>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">✨</div>
+        <h3 class="service-name">Deep Cleaning</h3>
+        <p class="service-desc">End-to-end deep cleaning for post-construction, move-in/out, and regular maintenance.</p>
+        <span class="service-num">07</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <p class="section-label reveal">Why Choose Us</p>
+  <h2 class="section-title reveal reveal-delay-1">Trusted by Homes<br>Across <em>Kerala</em></h2>
+  <div class="why-grid">
+    <div class="why-visual reveal">
+      <div class="why-box">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+          <div>
+            <div class="why-box-num">500+</div>
+            <div class="why-box-label">Projects Completed</div>
+          </div>
+          <div>
+            <div class="why-box-num">8+</div>
+            <div class="why-box-label">Services Offered</div>
+          </div>
+          <div>
+            <div class="why-box-num">100%</div>
+            <div class="why-box-label">Client Satisfaction</div>
+          </div>
+          <div>
+            <div class="why-box-num">5★</div>
+            <div class="why-box-label">Rated Service</div>
+          </div>
+        </div>
+      </div>
+      <div class="why-accent"></div>
+    </div>
+    <div class="why-points">
+      <div class="why-point reveal reveal-delay-1">
+        <div class="why-point-icon">🏆</div>
+        <div>
+          <div class="why-point-title">Quality Products</div>
+          <p class="why-point-text">We source only premium materials from trusted brands, ensuring longevity and elegance in every installation.</p>
+        </div>
+      </div>
+      <div class="why-point reveal reveal-delay-2">
+        <div class="why-point-icon">🔧</div>
+        <div>
+          <div class="why-point-title">Professional Installation</div>
+          <p class="why-point-text">Our trained technicians ensure precise, clean installation with minimal disruption to your space.</p>
+        </div>
+      </div>
+      <div class="why-point reveal reveal-delay-3">
+        <div class="why-point-icon">🤝</div>
+        <div>
+          <div class="why-point-title">Reliable After-Service</div>
+          <p class="why-point-text">We stand by our work. Get dedicated support and maintenance long after the project is done.</p>
+        </div>
+      </div>
+      <div class="why-point reveal">
+        <div class="why-point-icon">📍</div>
+        <div>
+          <div class="why-point-title">Local Expertise</div>
+          <p class="why-point-text">Based in Valappad, Thrissur — we understand Kerala's climate, homes, and style preferences.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="gallery-header">
+    <p class="section-label reveal">Our Portfolio</p>
+    <h2 class="section-title reveal reveal-delay-1">Work That <em>Speaks</em><br>For Itself</h2>
+    <p class="section-desc reveal reveal-delay-2">A glimpse into spaces we've transformed — each project a unique story of craftsmanship and care.</p>
+    <div class="gallery-tabs reveal reveal-delay-3" id="galleryTabs">
+      <button class="gallery-tab active" data-filter="all">All Work</button>
+      <button class="gallery-tab" data-filter="blinds">Blinds</button>
+      <button class="gallery-tab" data-filter="wallpaper">Wallpapers</button>
+      <button class="gallery-tab" data-filter="screens">Screens</button>
+      <button class="gallery-tab" data-filter="cleaning">Cleaning</button>
+    </div>
+  </div>
+
+  <div class="gallery-masonry reveal" id="galleryGrid">
+
+    <div class="gallery-item" data-cat="blinds">
+      <div class="gallery-placeholder" style="height:260px;background:linear-gradient(135deg,#3D7A7A,#6B4F35);">
+        <div class="gallery-placeholder-inner" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <span style="font-size:2.5rem;">🪟</span>
+          <span>Roller Blinds</span>
+        </div>
+      </div>
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-title">Modern Roller Blinds</div>
+        <div class="gallery-overlay-tag">Residential · Thrissur</div>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-cat="wallpaper">
+      <div class="gallery-placeholder" style="height:200px;background:linear-gradient(135deg,#8B7355,#3D7A7A);">
+        <div class="gallery-placeholder-inner" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <span style="font-size:2.5rem;">🎨</span>
+          <span>Textured Wallpaper</span>
+        </div>
+      </div>
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-title">Luxury Textured Wallpaper</div>
+        <div class="gallery-overlay-tag">Commercial · Ernakulam</div>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-cat="screens">
+      <div class="gallery-placeholder" style="height:300px;background:linear-gradient(135deg,#C8A97E,#3D7A7A);">
+        <div class="gallery-placeholder-inner" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <span style="font-size:2.5rem;">🦟</span>
+          <span>Mosquito Screen</span>
+        </div>
+      </div>
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-title">Sliding Insect Screen</div>
+        <div class="gallery-overlay-tag">Residential · Valappad</div>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-cat="wallpaper">
+      <div class="gallery-placeholder" style="height:230px;background:linear-gradient(135deg,#6B4F35,#C8A97E);">
+        <div class="gallery-placeholder-inner" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <span style="font-size:2.5rem;">🖼</span>
+          <span>Mural Wallpaper</span>
+        </div>
+      </div>
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-title">Custom Mural Design</div>
+        <div class="gallery-overlay-tag">Residential · Palakkad</div>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-cat="blinds">
+      <div class="gallery-placeholder" style="height:280px;background:linear-gradient(135deg,#2C2018,#3D7A7A);">
+        <div class="gallery-placeholder-inner" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <span style="font-size:2.5rem;">🪵</span>
+          <span>Wooden Blinds</span>
+        </div>
+      </div>
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-title">Premium Wooden Blinds</div>
+        <div class="gallery-overlay-tag">Commercial · Thrissur</div>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-cat="cleaning">
+      <div class="gallery-placeholder" style="height:200px;background:linear-gradient(135deg,#7EB8B8,#6B4F35);">
+        <div class="gallery-placeholder-inner" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <span style="font-size:2.5rem;">✨</span>
+          <span>Deep Clean</span>
+        </div>
+      </div>
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-title">Post-Construction Cleaning</div>
+        <div class="gallery-overlay-tag">Commercial · Kochi</div>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-cat="screens">
+      <div class="gallery-placeholder" style="height:250px;background:linear-gradient(135deg,#3D7A7A,#2C2018);">
+        <div class="gallery-placeholder-inner" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <span style="font-size:2.5rem;">🌡️</span>
+          <span>Cool Film</span>
+        </div>
+      </div>
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-title">Heat Reduction Window Film</div>
+        <div class="gallery-overlay-tag">Residential · Thrissur</div>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-cat="blinds">
+      <div class="gallery-placeholder" style="height:220px;background:linear-gradient(135deg,#C8A97E,#2C2018);">
+        <div class="gallery-placeholder-inner" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <span style="font-size:2.5rem;">🏠</span>
+          <span>Zebra Blinds</span>
+        </div>
+      </div>
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-title">Zebra Dual Blinds</div>
+        <div class="gallery-overlay-tag">Residential · Kozhikode</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label reveal">Get In Touch</p>
+  <h2 class="section-title reveal reveal-delay-1">Let's Build <em>Together</em></h2>
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <p class="section-desc" style="margin-bottom:1rem;">Ready to transform your space? Get a free consultation and quote from our experts.</p>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Location</div>
+          <div class="contact-value">Karayamuttam, Valappad<br>Thrissur, Kerala — India</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-label">Phone / WhatsApp</div>
+          <div class="contact-value">+91 XXXXX XXXXX</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📧</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">hello@cladify.in</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🕐</div>
+        <div>
+          <div class="contact-label">Working Hours</div>
+          <div class="contact-value">Monday – Saturday<br>9:00 AM – 6:00 PM</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form reveal reveal-delay-2" id="contactForm">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" type="text" placeholder="Your name" id="fname" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input class="form-input" type="tel" placeholder="+91 XXXXX XXXXX" id="fphone" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Service Interested In</label>
+        <select class="form-select" id="fservice">
+          <option value="">Select a service</option>
+          <option>Mosquito Screens</option>
+          <option>Blinds & Curtains</option>
+          <option>Wallpapers</option>
+          <option>Cool Film & Vinyl</option>
+          <option>Sign Board Works</option>
+          <option>Pest Control</option>
+          <option>Deep Cleaning</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message</label>
+        <textarea class="form-textarea" id="fmsg" placeholder="Tell us about your project..."></textarea>
+      </div>
+      <button class="form-submit" onclick="submitForm()">Send Enquiry →</button>
+      <div class="form-success" id="formSuccess">✓ Thank you! We'll reach out to you shortly.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="WhatsApp_Image_2026-04-13_at_5_20_54_PM.jpeg" alt="Cladify" id="footer-logo-img" />
+      <p>Transforming homes and commercial spaces across Kerala with premium interior and protection solutions since our founding.</p>
+    </div>
+    <div>
+      <div class="footer-heading">Services</div>
+      <div class="footer-links">
+        <a href="#services">Mosquito Screens</a>
+        <a href="#services">Blinds & Curtains</a>
+        <a href="#services">Wallpapers</a>
+        <a href="#services">Cool Film & Vinyl</a>
+        <a href="#services">Pest Control</a>
+        <a href="#services">Deep Cleaning</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-heading">Company</div>
+      <div class="footer-links">
+        <a href="#why">About Us</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#contact">Contact</a>
+        <a href="#contact">Get a Quote</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Cladify Home & Living. All rights reserved.</span>
+    <span>Designed with ♥ in Kerala</span>
+  </div>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/91XXXXXXXXXX" class="wa-float" target="_blank" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<script>
+  // Custom cursor
+  const cur = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cur.style.left = mx + 'px';
+    cur.style.top = my + 'px';
+    ring.style.left = mx + 'px';
+    ring.style.top = my + 'px';
+  });
+  document.querySelectorAll('a,button,.service-card,.gallery-item,.why-point').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+  });
+
+  // Try loading the uploaded logo in all img tags
+  const logoSrc = 'WhatsApp_Image_2026-04-13_at_5_20_54_PM.jpeg';
+  document.querySelectorAll('img').forEach(img => {
+    img.onerror = () => {
+      // Generate inline SVG placeholder of C logo shape
+      img.style.display = 'none';
+    };
+  });
+
+  // Nav scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Hamburger
+  const ham = document.getElementById('hamburger');
+  const mob = document.getElementById('mobileMenu');
+  ham.addEventListener('click', () => mob.classList.toggle('open'));
+  function closeMobile() { mob.classList.remove('open'); }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => ro.observe(el));
+
+  // Services slider
+  const track = document.getElementById('svcTrack');
+  let svcIdx = 0;
+  const cardW = 280 + 24;
+  const total = track.children.length;
+  function getSvcVisible() { return Math.floor(track.parentElement.offsetWidth / cardW); }
+  document.getElementById('svc-next').addEventListener('click', () => {
+    const vis = getSvcVisible();
+    if (svcIdx < total - vis) { svcIdx++; track.style.transform = `translateX(-${svcIdx * cardW}px)`; }
+  });
+  document.getElementById('svc-prev').addEventListener('click', () => {
+    if (svcIdx > 0) { svcIdx--; track.style.transform = `translateX(-${svcIdx * cardW}px)`; }
+  });
+
+  // Gallery filter
+  document.getElementById('galleryTabs').addEventListener('click', e => {
+    const btn = e.target.closest('.gallery-tab');
+    if (!btn) return;
+    document.querySelectorAll('.gallery-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    document.querySelectorAll('.gallery-item').forEach(item => {
+      const show = filter === 'all' || item.dataset.cat === filter;
+      item.style.opacity = show ? '1' : '0.2';
+      item.style.transform = show ? 'scale(1)' : 'scale(0.95)';
+      item.style.transition = 'opacity 0.4s, transform 0.4s';
+    });
+  });
+
+  // Form submit
+  function submitForm() {
+    const n = document.getElementById('fname').value.trim();
+    const p = document.getElementById('fphone').value.trim();
+    if (!n || !p) { alert('Please fill in your name and phone number.'); return; }
+    document.getElementById('formSuccess').style.display = 'block';
+    document.querySelector('.form-submit').style.display = 'none';
+  }
+</script>
+</body>
+</html>
